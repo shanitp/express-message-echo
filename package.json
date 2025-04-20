@@ -1,0 +1,17 @@
+{
+  "name": "express-message-echo",
+  "version": "1.0.0",
+  "description": "A simple Express.js REST API service that echoes POST messages. Features a '/hello' endpoint that receives and returns JSON messages.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
