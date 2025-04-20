@@ -5,24 +5,26 @@ const app = express();
 app.use(express.json());
 
 BASE_PATH = 'http://localhost:8080'; // Replace with your actual base path
+KEY = '00 E4 35 FF 01 35 78 91 AB CD 00 E4 67 F0 12 CF';
 
-
-const encrypt = async (message) => {
+const encrypt = async (message, key) => {
     const encryptedBody = await fetch(`${BASE_PATH}/encrypt`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-encrypt-key': key
         },
         body: JSON.stringify(message)
     });
     return await encryptedBody.text();
 };
 
-const decrypt = async (message) => {
+const decrypt = async (message, key) => {
     const decryptedMessage = await fetch(`${BASE_PATH}/decrypt`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-encrypt-key': key
         },
         body: JSON.stringify({
             message
@@ -31,12 +33,12 @@ const decrypt = async (message) => {
     return await decryptedMessage.text();
 };
 
-
-const processMessage = async (message) => {
+const processMessage = async (message, key) => {
     const processMessage = await fetch(`${BASE_PATH}/index`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-encrypt-key': key
         },
         body: message
     });
@@ -45,13 +47,11 @@ const processMessage = async (message) => {
 
 // POST endpoint at /hello
 app.post('/hello', async (req, res) => {
-    const encryptedBodyText = await encrypt(req.body);
-    console.log("processMessage.......................");
-    const processedMessage = await processMessage(encryptedBodyText);
-    console.log("processedMessage.......................");
-    const decrypteBody = await decrypt(processedMessage);
-    console.log("decrypteBody.......................");
-    const decryptedJson  = JSON.parse(decrypteBody);
+    const encryptKey = req.headers['x-encrypt-key']; // Use provided key or fallback to default KEY
+    const encryptedBodyText = await encrypt(req.body, encryptKey);
+    const processedMessage = await processMessage(encryptedBodyText, encryptKey);
+    const decrypteBody = await decrypt(processedMessage, encryptKey);
+    const decryptedJson = JSON.parse(decrypteBody);
     res.json(decryptedJson);
 });
 
