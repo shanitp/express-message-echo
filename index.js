@@ -4,7 +4,7 @@ const app = express();
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-BASE_PATH = 'http://localhost:8080'; // Replace with your actual base path
+BASE_PATH = 'http://ec2-18-116-51-254.us-east-2.compute.amazonaws.com:8080'; // Replace with your actual base path
 KEY = '00 E4 35 FF 01 35 78 91 AB CD 00 E4 67 F0 12 CF';
 
 const encrypt = async (message, key) => {
@@ -55,7 +55,7 @@ app.post('/hello', async (req, res) => {
     res.json(decryptedJson);
 });
 
-const PORT = 3000;
+const PORT = 8080;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
